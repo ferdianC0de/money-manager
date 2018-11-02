@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::prefix('member')->middleware(['auth','role:member'])->group(function () {
+    Route::get('/', 'HomeController@index')->name('member-index');
+    Route::resource('post', 'PostController');
+});

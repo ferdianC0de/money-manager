@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use App\Models\Entrust\Role;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -68,5 +71,14 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function register(Request $request)
+    {
+      $role = Role::find(1); //member
+      $user = $this->create($request->all());
+      $user->attachRole($role);
+      Auth::loginUsingId($user->id);
+      return redirect('/home');
     }
 }
